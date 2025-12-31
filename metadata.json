@@ -1,0 +1,7 @@
+{
+  "name": "PitchTime: Futsal Rotation Manager",
+  "description": "A high-performance substitution and playing-time tracker for football and futsal, featuring AI-powered rotation advice to ensure fair play.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
