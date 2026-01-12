@@ -6,6 +6,8 @@ export interface Player {
   isActive: boolean;
   lastSubbedAt: number | null; // timestamp in ms
   role: 'field' | 'goalkeeper';
+  totalGoals: number;
+  totalAssists: number;
 }
 
 export interface MatchEvent {
@@ -18,6 +20,34 @@ export interface MatchEvent {
 }
 
 export type Language = 'en' | 'es' | 'pt' | 'ar';
+
+export interface Fixture {
+  id: string;
+  opponentId: string;
+  date: string;
+  venue: string;
+}
+
+export interface StandingEntry {
+  teamName: string;
+  played: number;
+  won: number;
+  drawn: number;
+  lost: number;
+  gf: number; // Goals For
+  ga: number; // Goals Against
+  gd: number; // Goal Difference
+  points: number;
+}
+
+export interface MatchResult {
+  id: string;
+  teamA: string;
+  scoreA: number;
+  teamB: string;
+  scoreB: number;
+  date: string;
+}
 
 export interface MatchState {
   isRunning: boolean;
@@ -35,16 +65,7 @@ export interface MatchState {
   shotsOffGoalTheir: number;
   events: MatchEvent[];
   language: Language;
-}
-
-export interface MatchInfo {
-  opponent: string;
-  scoreOur: number;
-  scoreTheir: number;
-  date: string;
-  youtubeId?: string;
-  venue: string;
-  description?: string;
+  currentOpponentName: string;
 }
 
 export interface TeamData {
@@ -56,6 +77,7 @@ export interface TeamData {
 export interface Opponent {
   id: string;
   name: string;
+  logoUrl?: string;
   strength: 'low' | 'medium' | 'high';
   notes?: string;
 }
@@ -64,4 +86,6 @@ export interface Competition {
   id: string;
   name: string;
   opponents: Opponent[];
+  calendar: Fixture[];
+  results: MatchResult[];
 }
