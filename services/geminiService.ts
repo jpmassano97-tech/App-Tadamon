@@ -2,9 +2,12 @@
 import { GoogleGenAI } from "@google/genai";
 import { Player } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Removed global initialization to comply with guidelines:
+// "Create a new GoogleGenAI instance right before making an API call to ensure it always uses the most up-to-date API key"
 
 export const getSubstitutionAdvice = async (players: Player[], matchTime: number): Promise<string> => {
+  // Initialize AI client inside the function to use the current API key
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const activePlayers = players.filter(p => p.isActive);
   const benchPlayers = players.filter(p => !p.isActive);
 
@@ -44,6 +47,8 @@ export const analyzeIntelligenceSource = async (
   content: string, // text, url, or base64 image data
   mimeType?: string
 ): Promise<string> => {
+  // Initialize AI client inside the function to use the current API key
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const modelName = sourceType === 'url' ? 'gemini-3-pro-preview' : 'gemini-3-flash-preview';
   
   const systemInstruction = `
@@ -84,7 +89,7 @@ export const analyzeIntelligenceSource = async (
 
     let output = response.text || "No intelligence could be extracted.";
     
-    // If search grounding was used, append sources
+    // If search grounding was used, extract URLs from groundingChunks as per the MUST requirement
     if (sourceType === 'url' && response.candidates?.[0]?.groundingMetadata?.groundingChunks) {
       const links = response.candidates[0].groundingMetadata.groundingChunks
         .map((chunk: any) => chunk.web?.uri)
